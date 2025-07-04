@@ -1,7 +1,13 @@
 import { games } from "@/app/data/games";
 import { FaGamepad, FaCalendarAlt, FaDesktop, FaStar } from "react-icons/fa";
 
-export default function GamePage({ params }: { params: { slug: string } }) {
+type PageProps = {
+  params: {
+    slug: string;
+  };
+};
+
+export default function GamePage({ params }: PageProps) {
   const { slug } = params;
 
   const game = games.find((game) => game.slug === slug);
@@ -13,7 +19,7 @@ export default function GamePage({ params }: { params: { slug: string } }) {
       </div>
     );
   }
-
+  
   return (
     <div className="w-full min-h-screen bg-gray-950 p-6 sm:p-10 text-gray-300">
       <div className="relative w-full h-96 overflow-hidden rounded-xl shadow-2xl">
