@@ -1,7 +1,13 @@
 import { games } from "@/app/data/games";
 import { FaGamepad, FaCalendarAlt, FaDesktop, FaStar } from "react-icons/fa";
 
-export default function GamePage({ params }: { params: { slug: string } }) {
+type Props = {
+  params: {
+    slug: string;
+  };
+};
+
+export default function GamePage({ params }: Props) {
   const { slug } = params;
 
   const game = games.find((game) => game.slug === slug);
@@ -30,7 +36,7 @@ export default function GamePage({ params }: { params: { slug: string } }) {
       </div>
 
       <div className="mt-10 space-y-6 max-w-7xl mx-auto">
-        {[
+        {[ 
           { label: "Description", value: game.description },
           { label: "Story", value: game.story },
           { label: "Setting", value: game.setting },
