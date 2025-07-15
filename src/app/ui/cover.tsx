@@ -11,7 +11,8 @@ export const Cover = ({
 }: {
   children?: React.ReactNode;
   className?: string;
-}) => {
+  }) => {
+
   const [hovered, setHovered] = useState(false);
 
   const ref = useRef<HTMLDivElement>(null);
