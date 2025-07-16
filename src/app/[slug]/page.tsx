@@ -144,7 +144,7 @@ function GameNotFound() {
       <div className="flex flex-col items-center justify-center min-h-[50vh]">
         <h1 className="text-2xl font-bold text-white mb-4">Game Not Found</h1>
         <p className="text-gray-400 mb-6">
-          The game you're looking for doesn't exist.
+          The game you&apos;re looking for doesn&apos;t exist.
         </p>
         <Link
           href="/"
