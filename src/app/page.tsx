@@ -11,9 +11,9 @@ export default function GamesPage() {
   const router = useRouter();
 
   return (
-    <div className="relative bg-gradient-to-br from-blue-950 via-blue-950 to-gray-900 z-10 min-h-screen p-10">
+    <div className="relative bg-gradient-to-br from-blue-900 via-blue-950 to-gray-900 z-10 min-h-screen lg:p-10 p-5">
       <h1
-        className={`text-4xl font-bold text-white text-center font-serif mb-10`}
+        className={`text-2xl lg:text-4xl font-bold text-white text-center font-serif lg:mb-10 mb-8`}
       >
         <Cover>Explore Games</Cover>
       </h1>
@@ -29,7 +29,7 @@ export default function GamesPage() {
           >
             <CardContainer containerClassName="w-full">
               <CardBody
-                className="h-[350px] w-full cursor-pointer bg-gray-900/50 rounded-2xl transition-all duration-300"
+                className="h-[280px] lg:h-[330px] w-full cursor-pointer bg-gray-900/50 rounded-2xl transition-all duration-300"
                 onClick={() => router.push(`/${game.slug}`)}
               >
                 {/* Image */}

@@ -100,7 +100,7 @@ function InfoCard({
   isMultiline?: boolean;
 }) {
   return (
-    <div className="bg-gray-950 px-3 py-2 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 hover:bg-gray-750 flex flex-col justify-center min-h-[80px]">
+    <div className="bg-gray-900 px-3 py-2 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 hover:bg-gray-750 flex flex-col justify-center min-h-[80px]">
       <div className="flex items-center gap-2">
         <span className={iconColor}>{icon}</span>
         <span className="font-semibold text-white">{label}:</span>
@@ -202,7 +202,7 @@ export default function GameDetailPage({ params }: { params: Params }) {
 
   return (
     <Suspense fallback={<GameDetailSkeleton />}>
-      <div className="w-full min-h-screen bg-gray-900 p-6 text-gray-300">
+      <div className="w-full min-h-screen bg-gradient-to-tl from-blue-900 via-blue-950 to-gray-900 p-6 text-gray-300">
         {/* Hero Section */}
         <div className="relative w-full h-[50vh] sm:h-[70vh] lg:h-[80vh] overflow-hidden rounded-xl shadow-2xl group">
           <div
