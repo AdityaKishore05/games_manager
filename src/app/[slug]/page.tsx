@@ -222,7 +222,7 @@ export default function GameDetailPage({ params }: { params: Params }) {
               }`}
             />
             <div
-              className={`absolute inset-0 bg-black/20 transition-opacity duration-300 ${
+              className={`absolute inset-0 bg:black/0 lg:bg-black/10 transition-opacity duration-300 ${
                 isLaptopScreen ? "group-hover:bg-black/10" : ""
               }`}
             />
@@ -243,7 +243,7 @@ export default function GameDetailPage({ params }: { params: Params }) {
           <GameInfoSection game={game} />
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-15 pt-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:gap-15 gap-5 pt-8">
             <CardContainer>
               <CardBody>
                 <CardItem translateZ={40}>
