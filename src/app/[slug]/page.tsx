@@ -2,19 +2,21 @@
 import { games } from "@/app/data/games";
 import { FaGamepad, FaCalendarAlt, FaDesktop, FaStar } from "react-icons/fa";
 import { Suspense, useState, useEffect } from "react";
-import localFont from "next/font/local";
 import Link from "next/link";
-import { Metadata } from "next";
-import { notFound } from "next/navigation";
-
-
 
 type Params = Promise<{ slug: string }>;
 
 // Image Modal Component
-function ImageModal({ isOpen, onClose, image, title }) {
+interface ImageModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  image: string;
+  title: string;
+}
+
+function ImageModal({ isOpen, onClose, image, title }: ImageModalProps) {
   useEffect(() => {
-    const handleEscape = (e) => {
+    const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         onClose();
       }
@@ -97,7 +99,7 @@ function InfoCard({
   isMultiline?: boolean;
 }) {
   return (
-    <div className="bg-gray-800 p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 hover:bg-gray-750 flex flex-col justify-center min-h-[80px]">
+    <div className="bg-gray-900 px-3 py-2 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 hover:bg-gray-750 flex flex-col justify-center min-h-[80px]">
       <div className="flex items-center gap-2">
         <span className={iconColor}>{icon}</span>
         <span className="font-semibold text-white">{label}:</span>
@@ -169,7 +171,7 @@ export default function GameDetailPage({ params }: { params: Params }) {
 
   return (
     <Suspense fallback={<GameDetailSkeleton />}>
-      <div className="w-full min-h-screen bg-gray-950 p-6 text-gray-300">
+      <div className="w-full min-h-screen bg-blue-950 p-6 text-gray-300">
         {/* Hero Section */}
         <div className="relative w-full h-[50vh] sm:h-[70vh] lg:h-[80vh] overflow-hidden rounded-xl shadow-2xl group">
           <div

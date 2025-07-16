@@ -11,7 +11,7 @@ export default function GamesPage() {
   const router = useRouter();
 
   return (
-    <div className="relative bg-gray-950 z-10 min-h-screen p-10">
+    <div className="relative bg-gradient-to-br from-blue-900 via-blue-950 to-blue-900 z-10 min-h-screen p-10">
       <h1
         className={`text-4xl font-bold text-white text-center font-serif mb-10`}
       >
@@ -29,11 +29,11 @@ export default function GamesPage() {
           >
             <CardContainer containerClassName="w-full">
               <CardBody
-                className="h-[380px] w-full cursor-pointer bg-gray-900/50 rounded-2xl transition-all duration-300"
+                className="h-[350px] w-full cursor-pointer bg-gray-900/50 rounded-2xl transition-all duration-300"
                 onClick={() => router.push(`/${game.slug}`)}
               >
                 {/* Image */}
-                <div className="relative h-[55%] overflow-hidden rounded-t-2xl">
+                <div className="relative h-[60%] overflow-hidden rounded-t-2xl">
                   <CardItem translateZ={20}>
                     <img
                       src={game.image}
@@ -51,12 +51,12 @@ export default function GamesPage() {
                 </div>
 
                 {/* Title & Description */}
-                <div className="p-4 h-[40%] flex flex-col justify-center">
+                <div className=" h-[35%] flex flex-col justify-center">
                   <CardItem translateZ={40}>
                     <h2 className="text-xl font-bold text-white group-hover:text-yellow-300 transition text-center mb-2 font-serif">
                       {game.title}
                     </h2>
-                    <p className="text-sm text-gray-300 line-clamp-3 text-center">
+                    <p className="text-sm text-gray-300 line-clamp-2 text-center">
                       {game.description}
                     </p>
                   </CardItem>
