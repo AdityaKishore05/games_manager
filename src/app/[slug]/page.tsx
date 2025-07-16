@@ -1,5 +1,6 @@
 "use client";
 import { games } from "@/app/data/games";
+import { Game } from "@/app/data/games";
 import { FaGamepad, FaCalendarAlt, FaDesktop, FaStar } from "react-icons/fa";
 import { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
@@ -99,7 +100,7 @@ function InfoCard({
   isMultiline?: boolean;
 }) {
   return (
-    <div className="bg-gray-900 px-3 py-2 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 hover:bg-gray-750 flex flex-col justify-center min-h-[80px]">
+    <div className="bg-gray-950 px-3 py-2 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 hover:bg-gray-750 flex flex-col justify-center min-h-[80px]">
       <div className="flex items-center gap-2">
         <span className={iconColor}>{icon}</span>
         <span className="font-semibold text-white">{label}:</span>
@@ -111,7 +112,7 @@ function InfoCard({
 }
 
 // Game info section component
-function GameInfoSection({ game }: { game: any }) {
+function GameInfoSection({ game }: { game: Game }) {
   const infoItems = [
     { label: "Description", value: game.description },
     { label: "Story", value: game.story },
@@ -136,12 +137,32 @@ function GameInfoSection({ game }: { game: any }) {
   );
 }
 
+// Game Not Found Component
+function GameNotFound() {
+  return (
+    <div className="w-full min-h-screen bg-blue-950 p-6 text-gray-300">
+      <div className="flex flex-col items-center justify-center min-h-[50vh]">
+        <h1 className="text-2xl font-bold text-white mb-4">Game Not Found</h1>
+        <p className="text-gray-400 mb-6">
+          The game you're looking for doesn't exist.
+        </p>
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors duration-200"
+        >
+          ← Back to Games
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 // Main component
 export default function GameDetailPage({ params }: { params: Params }) {
-  const [slug, setSlug] = useState<string>("");
-  const [game, setGame] = useState<any>(null);
+  const [game, setGame] = useState<Game | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLaptopScreen, setIsLaptopScreen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -156,22 +177,32 @@ export default function GameDetailPage({ params }: { params: Params }) {
 
   useEffect(() => {
     const initializeParams = async () => {
-      const resolvedParams = await params;
-      setSlug(resolvedParams.slug);
-      const foundGame = games.find((g) => g.slug === resolvedParams.slug);
-      setGame(foundGame);
+      try {
+        const resolvedParams = await params;
+        const foundGame = games.find((g) => g.slug === resolvedParams.slug);
+        setGame(foundGame || null);
+      } catch (error) {
+        console.error("Error resolving params:", error);
+        setGame(null);
+      } finally {
+        setLoading(false);
+      }
     };
 
     initializeParams();
   }, [params]);
 
-  if (!game) {
+  if (loading) {
     return <GameDetailSkeleton />;
+  }
+
+  if (!game) {
+    return <GameNotFound />;
   }
 
   return (
     <Suspense fallback={<GameDetailSkeleton />}>
-      <div className="w-full min-h-screen bg-blue-950 p-6 text-gray-300">
+      <div className="w-full min-h-screen bg-gray-900 p-6 text-gray-300">
         {/* Hero Section */}
         <div className="relative w-full h-[50vh] sm:h-[70vh] lg:h-[80vh] overflow-hidden rounded-xl shadow-2xl group">
           <div
