@@ -4,6 +4,8 @@ import { Game } from "@/app/data/games";
 import { FaGamepad, FaCalendarAlt, FaDesktop, FaStar } from "react-icons/fa";
 import { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
+import { CardContainer, CardBody, CardItem } from "../ui/3d-card";
+
 
 type Params = Promise<{ slug: string }>;
 
@@ -100,7 +102,7 @@ function InfoCard({
   isMultiline?: boolean;
 }) {
   return (
-    <div className="bg-gray-900 px-3 py-2 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 hover:bg-gray-750 flex flex-col justify-center min-h-[80px]">
+    <div className="bg-gradient-to-tl from-blue-900 via-gray-950 to-blue-900 w-80 h-25 p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 hover:bg-gray-750 flex flex-col justify-center">
       <div className="flex items-center gap-2">
         <span className={iconColor}>{icon}</span>
         <span className="font-semibold text-white">{label}:</span>
@@ -241,40 +243,61 @@ export default function GameDetailPage({ params }: { params: Params }) {
           <GameInfoSection game={game} />
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-8">
-            <InfoCard
-              icon={<FaStar />}
-              iconColor="text-yellow-400"
-              label="Rating"
-              value={`${game.rating}/10`}
-            />
-
-            <InfoCard
-              icon={<FaCalendarAlt />}
-              iconColor="text-blue-400"
-              label="Release Date"
-              value={game.releaseDate}
-            />
-
-            <InfoCard
-              icon={<FaGamepad />}
-              iconColor="text-green-400"
-              label="Developer"
-              value={game.developer}
-              isMultiline
-            />
-
-            <InfoCard
-              icon={<FaDesktop />}
-              iconColor="text-pink-400"
-              label="Platforms"
-              value={
-                Array.isArray(game.platforms)
-                  ? game.platforms.join(", ")
-                  : game.platforms
-              }
-              isMultiline
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-15 pt-8">
+            <CardContainer>
+              <CardBody>
+                <CardItem translateZ={40}>
+                  <InfoCard
+                    icon={<FaStar />}
+                    iconColor="text-yellow-400"
+                    label="Rating"
+                    value={`${game.rating}/10`}
+                  />
+                </CardItem>
+              </CardBody>
+            </CardContainer>
+            <CardContainer>
+              <CardBody>
+                <CardItem translateZ={40}>
+                  <InfoCard
+                    icon={<FaCalendarAlt />}
+                    iconColor="text-blue-400"
+                    label="Release Date"
+                    value={game.releaseDate}
+                  />
+                </CardItem>
+              </CardBody>
+            </CardContainer>
+            <CardContainer>
+              <CardBody>
+                <CardItem translateZ={40}>
+                  <InfoCard
+                    icon={<FaGamepad />}
+                    iconColor="text-green-400"
+                    label="Developer"
+                    value={game.developer}
+                    isMultiline
+                  />
+                </CardItem>
+              </CardBody>
+            </CardContainer>
+            <CardContainer>
+              <CardBody>
+                <CardItem translateZ={40}>
+                  <InfoCard
+                    icon={<FaDesktop />}
+                    iconColor="text-pink-400"
+                    label="Platforms"
+                    value={
+                      Array.isArray(game.platforms)
+                        ? game.platforms.join(", ")
+                        : game.platforms
+                    }
+                    isMultiline
+                  />
+                </CardItem>
+              </CardBody>
+            </CardContainer>
           </div>
 
           {/* Back Navigation */}
