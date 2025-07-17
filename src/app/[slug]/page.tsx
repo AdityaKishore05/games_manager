@@ -55,12 +55,17 @@ function ImageModal({ isOpen, onClose, image, title }: ImageModalProps) {
         </button>
 
         {/* Image - prevent event bubbling so clicking image doesn't close modal */}
-        <img
-          src={image}
-          alt={title}
-          className="w-full h-full object-contain rounded-lg max-h-[85vh]"
-          onClick={(e) => e.stopPropagation()}
-        />
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          onClick={onClose}
+        >
+          <img
+            src={image}
+            alt={title}
+            className="max-w-full max-h-[85vh] object-contain rounded-lg" // Changed from w-full h-full
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
 
         {/* Title */}
         <div className="absolute bottom-4 left-4 right-4 bg-black/70 text-white p-4 rounded-lg">
@@ -102,7 +107,7 @@ function InfoCard({
   isMultiline?: boolean;
 }) {
   return (
-    <div className="bg-gradient-to-tl from-blue-900 via-gray-950 to-blue-900 w-80 h-25 p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 hover:bg-gray-750 flex flex-col justify-center">
+    <div className="bg-blue-950 w-80 h-25 p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col justify-center">
       <div className="flex items-center gap-2">
         <span className={iconColor}>{icon}</span>
         <span className="font-semibold text-white">{label}:</span>
@@ -204,7 +209,7 @@ export default function GameDetailPage({ params }: { params: Params }) {
 
   return (
     <Suspense fallback={<GameDetailSkeleton />}>
-      <div className="w-full min-h-screen bg-gradient-to-tl from-blue-900 via-blue-950 to-gray-900 p-6 text-gray-300">
+      <div className="w-full min-h-screen bg-blue-900 p-6 text-gray-300">
         {/* Hero Section */}
         <div className="relative w-full h-[50vh] sm:h-[70vh] lg:h-[80vh] overflow-hidden rounded-xl shadow-2xl group">
           <div
