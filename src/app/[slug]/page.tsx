@@ -196,7 +196,7 @@ export default function GameDetailPage({ params }: { params: Params }) {
 
   return (
     <Suspense fallback={<GameDetailSkeleton />}>
-      <div className="w-full min-h-screen bg-gradient-to-br from-purple-700 via-blue-700 to-purple-700  p-6 text-gray-300">
+      <div className="w-full min-h-screen bg-gradient-to-b from-purple-700 via-blue-700 to-purple-700  p-6 text-gray-300">
         {/* Hero Section */}
         <div className="relative w-full h-[50vh] sm:h-[70vh] lg:h-[80vh] overflow-hidden rounded-xl shadow-2xl group">
           <div
