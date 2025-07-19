@@ -44,19 +44,11 @@ function ImageModal({ isOpen, onClose, image, title }: ImageModalProps) {
       <div className="absolute inset-0" onClick={onClose} />
 
       {/* Modal content */}
-      <div className="relative max-w-7xl max-h-[90vh] w-full">
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-2 right-40 z-10 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors text-2xl cursor-pointer w-12 h-10 pb-1 flex items-center justify-center"
-          aria-label="Close modal"
-        >
-          ×
-        </button>
+      <div className="relative max-w-7xl max-h-[90vh] w-full">    
 
         {/* Image - prevent event bubbling so clicking image doesn't close modal */}
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center z-50"
           onClick={onClose}
         >
           <img
@@ -65,11 +57,6 @@ function ImageModal({ isOpen, onClose, image, title }: ImageModalProps) {
             className="max-w-full max-h-[85vh] object-contain rounded-lg" // Changed from w-full h-full
             onClick={(e) => e.stopPropagation()}
           />
-        </div>
-
-        {/* Title */}
-        <div className="absolute bottom-4 left-4 right-4 bg-black/70 text-white p-4 rounded-lg">
-          <h2 className="text-xl font-bold">{title}</h2>
         </div>
       </div>
     </div>
@@ -107,7 +94,7 @@ function InfoCard({
   isMultiline?: boolean;
 }) {
   return (
-    <div className="bg-blue-950 w-80 h-25 p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col justify-center">
+    <div className="bg-gradient-to-b from-blue-800 via-blue-600 to-blue-800 w-80 h-25 p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col justify-center">
       <div className="flex items-center gap-2">
         <span className={iconColor}>{icon}</span>
         <span className="font-semibold text-white">{label}:</span>
@@ -209,7 +196,7 @@ export default function GameDetailPage({ params }: { params: Params }) {
 
   return (
     <Suspense fallback={<GameDetailSkeleton />}>
-      <div className="w-full min-h-screen bg-blue-900 p-6 text-gray-300">
+      <div className="w-full min-h-screen bg-gradient-to-br from-purple-700 via-blue-700 to-purple-700  p-6 text-gray-300">
         {/* Hero Section */}
         <div className="relative w-full h-[50vh] sm:h-[70vh] lg:h-[80vh] overflow-hidden rounded-xl shadow-2xl group">
           <div
