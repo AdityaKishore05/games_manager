@@ -94,7 +94,7 @@ function InfoCard({
   isMultiline?: boolean;
 }) {
   return (
-    <div className="bg-gradient-to-b from-blue-800 via-blue-600 to-blue-800 w-80 h-25 p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col justify-center">
+    <div className="bg-gradient-to-b from-blue-900 via-blue-700 to-blue-900 w-80 h-25 p-5 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col justify-center">
       <div className="flex items-center gap-2">
         <span className={iconColor}>{icon}</span>
         <span className="font-semibold text-white">{label}:</span>
