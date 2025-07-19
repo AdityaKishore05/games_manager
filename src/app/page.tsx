@@ -11,7 +11,7 @@ export default function GamesPage() {
   const router = useRouter();
 
   return (
-    <div className="relative bg-gradient-to-br from-purple-700 via-blue-700 to-purple-700 z-10 min-h-screen lg:p-10 p-5 select-none">
+    <div className="relative lg:bg-gradient-to-br bg-gradient-to-b from-purple-700 via-blue-700 to-purple-700 z-10 min-h-screen lg:p-10 p-5 select-none">
       <h1
         className={`text-3xl lg:text-4xl font-bold text-white text-center font-serif lg:mb-10 mb-8`}
       >
