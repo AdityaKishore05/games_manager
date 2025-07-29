@@ -159,20 +159,22 @@ export default function GamesPage() {
 
       {/* Search and Filter - Now sticky */}
       <div className="sticky top-0 z-40 bg-gradient-to-r from-purple-700 via-blue-700 to-purple-700 border-b border-white/20">
-        <SearchFilter
-          onSearch={setSearchQuery}
-          onFilter={setFilters}
-          onSort={setSortBy}
-          searchQuery={searchQuery}
-          activeFilters={filters}
-          sortBy={sortBy}
-          showOnlyFavorites={showOnlyFavorites}
-          onToggleFavorites={setShowOnlyFavorites}
-          favoritesCount={favorites.length}
-          compareList={compareList}
-          onToggleComparison={() => setShowComparison(true)}
-          isMounted={isHydrated}
-        />
+        <ClientOnly>
+          <SearchFilter
+            onSearch={setSearchQuery}
+            onFilter={setFilters}
+            onSort={setSortBy}
+            searchQuery={searchQuery}
+            activeFilters={filters}
+            sortBy={sortBy}
+            showOnlyFavorites={showOnlyFavorites}
+            onToggleFavorites={setShowOnlyFavorites}
+            favoritesCount={favorites.length}
+            compareList={compareList}
+            onToggleComparison={() => setShowComparison(true)}
+            isMounted={isHydrated}
+          />
+        </ClientOnly>
       </div>
 
       <div className="max-w-7xl mx-auto p-5 lg:p-10">
@@ -295,11 +297,13 @@ export default function GamesPage() {
       </div>
 
       {/* Game Comparison Modal */}
-      <GameComparison
-        games={compareGames}
-        isOpen={showComparison}
-        onClose={() => setShowComparison(false)}
-      />
+      <ClientOnly>
+        <GameComparison
+          games={compareGames}
+          isOpen={showComparison}
+          onClose={() => setShowComparison(false)}
+        />
+      </ClientOnly>
     </div>
   );
 }
