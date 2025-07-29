@@ -7,9 +7,13 @@ const MAX_RECENT_ITEMS = 5;
 
 export function useRecentlyViewed() {
   const [recentlyViewed, setRecentlyViewed] = useState<Game[]>([]);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    // Load recently viewed from localStorage on mount
+    // Mark as hydrated to prevent SSR mismatch
+    setIsHydrated(true);
+    
+    // Load recently viewed from localStorage after hydration
     const stored = localStorage.getItem("recently-viewed-games");
     if (stored) {
       try {
@@ -22,6 +26,8 @@ export function useRecentlyViewed() {
   }, []);
 
   const addToRecentlyViewed = (game: Game) => {
+    if (!isHydrated) return; // Prevent action before hydration
+    
     setRecentlyViewed(prev => {
       // Remove if already exists
       const filtered = prev.filter(item => item.id !== game.id);
@@ -35,7 +41,8 @@ export function useRecentlyViewed() {
   };
 
   return {
-    recentlyViewed,
-    addToRecentlyViewed
+    recentlyViewed: isHydrated ? recentlyViewed : [], // Return empty array during SSR
+    addToRecentlyViewed,
+    isHydrated
   };
 }
