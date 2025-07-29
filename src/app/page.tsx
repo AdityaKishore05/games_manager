@@ -12,7 +12,7 @@ import { useFavorites } from "./hooks/use-favorites";
 import { useRecentlyViewed } from "./hooks/use-recently-viewed";
 import { GameComparison, CompareButton } from "./ui/game-comparison";
 import { useState, useMemo, useEffect } from "react";
-import { Heart, Eye, Calendar, User, Star, Zap, BarChart3 } from "lucide-react";
+import { Heart, Zap, BarChart3 } from "lucide-react";
 
 
 interface FilterOptions {
@@ -83,17 +83,13 @@ export default function GamesPage() {
   const compareGames = games.filter(game => compareList.includes(game.id));
 
   const handleGameClick = (game: Game) => {
-    addToRecentlyViewed(game);
+    if (isMounted) {
+      addToRecentlyViewed(game);
+    }
     router.push(`/${game.slug}`);
   };
 
-  const getCategoryColor = (category: string) => {
-    const colors = {
-      "action-rpg": "from-red-500/20 to-orange-500/20 border-red-500/30",
-      "action-adventure": "from-blue-500/20 to-purple-500/20 border-blue-500/30"
-    };
-    return colors[category as keyof typeof colors] || "from-gray-500/20 to-gray-600/20 border-gray-500/30";
-  };
+
 
   const filteredAndSortedGames = useMemo(() => {
     let filtered = games.filter(game => {
@@ -149,17 +145,7 @@ export default function GamesPage() {
     return filtered;
   }, [searchQuery, filters, sortBy, showOnlyFavorites, isFavorite]);
 
-  const getRecommendations = () => {
-    if (!isMounted || favorites.length === 0) return [];
 
-    const favoriteGames = games.filter(game => favorites.includes(game.id));
-    const favoriteCategories = [...new Set(favoriteGames.map(game => game.category))];
-
-    return games
-      .filter(game => !favorites.includes(game.id) && favoriteCategories.includes(game.category))
-      .sort((a, b) => b.rating - a.rating)
-      .slice(0, 3);
-  };
 
   if (isLoading) {
     return (
