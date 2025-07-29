@@ -192,43 +192,6 @@ export default function GamesPage() {
             {/* Settings */}
             <div className="flex items-center gap-3">
               <button
-                onClick={() => setShowOnlyFavorites(!showOnlyFavorites)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all ${
-                  showOnlyFavorites
-                    ? 'bg-red-600 text-white'
-                    : 'bg-white/10 text-white hover:bg-white/20'
-                }`}
-                aria-label="Toggle favorites filter"
-              >
-                <Heart className={`w-4 h-4 ${showOnlyFavorites ? 'fill-white' : ''}`} />
-                <span className="hidden sm:inline">Favorites</span>
-                {isMounted && favorites.length > 0 && (
-                  <span className="bg-white/20 text-xs px-1.5 py-0.5 rounded-full">
-                    {favorites.length}
-                  </span>
-                )}
-              </button>
-
-              <button
-                onClick={() => setShowComparison(true)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all ${
-                  compareList.length > 0
-                    ? 'bg-green-600 text-white'
-                    : 'bg-white/10 text-white hover:bg-white/20'
-                }`}
-                aria-label="Compare selected games"
-                disabled={compareList.length === 0}
-              >
-                <BarChart3 className="w-4 h-4" />
-                <span className="hidden sm:inline">Compare</span>
-                {isMounted && compareList.length > 0 && (
-                  <span className="bg-white/20 text-xs px-1.5 py-0.5 rounded-full">
-                    {compareList.length}
-                  </span>
-                )}
-              </button>
-
-              <button
                 onClick={toggleHighContrast}
                 className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all"
                 aria-label="Toggle high contrast mode"
@@ -240,79 +203,27 @@ export default function GamesPage() {
         </div>
       </div>
 
-      {/* Search and Filter */}
-      <SearchFilter
-        onSearch={setSearchQuery}
-        onFilter={setFilters}
-        onSort={setSortBy}
-        searchQuery={searchQuery}
-        activeFilters={filters}
-        sortBy={sortBy}
-      />
+      {/* Search and Filter - Now sticky */}
+      <div className="sticky top-0 z-40 bg-gradient-to-r from-purple-700 via-blue-700 to-purple-700 border-b border-white/20">
+        <SearchFilter
+          onSearch={setSearchQuery}
+          onFilter={setFilters}
+          onSort={setSortBy}
+          searchQuery={searchQuery}
+          activeFilters={filters}
+          sortBy={sortBy}
+          showOnlyFavorites={showOnlyFavorites}
+          onToggleFavorites={setShowOnlyFavorites}
+          favoritesCount={favorites.length}
+          compareList={compareList}
+          onToggleComparison={() => setShowComparison(true)}
+          isMounted={isMounted}
+        />
+      </div>
 
       <div className="max-w-7xl mx-auto p-5 lg:p-10">
-        {/* Recently Viewed */}
-        {isMounted && recentlyViewed.length > 0 && (
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-              <Eye className="w-5 h-5" />
-              Recently Viewed
-            </h2>
-            <div className="flex gap-4 overflow-x-auto pb-2">
-              {recentlyViewed.slice(0, 5).map((game) => (
-                <div
-                  key={`recent-${game.id}`}
-                  className="flex-shrink-0 w-32 cursor-pointer group"
-                  onClick={() => handleGameClick(game)}
-                >
-                  <img
-                    src={game.image}
-                    alt={game.title}
-                    className="w-full h-20 object-cover rounded-lg group-hover:scale-105 transition-transform"
-                    loading="lazy"
-                  />
-                  <p className="text-sm text-white mt-1 truncate">{game.title}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
-        {/* Recommendations */}
-        {isMounted && getRecommendations().length > 0 && (
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-              <Star className="w-5 h-5" />
-              Recommended for You
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {getRecommendations().map((game) => (
-                <div
-                  key={`rec-${game.id}`}
-                  className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20 rounded-lg p-3 cursor-pointer hover:scale-105 transition-transform"
-                  onClick={() => handleGameClick(game)}
-                >
-                  <div className="flex gap-3">
-                    <img
-                      src={game.image}
-                      alt={game.title}
-                      className="w-16 h-16 object-cover rounded"
-                      loading="lazy"
-                    />
-                    <div className="flex-1">
-                      <h3 className="text-white font-semibold text-sm">{game.title}</h3>
-                      <p className="text-gray-300 text-xs mt-1">{game.category.replace('-', ' ')}</p>
-                      <div className="flex items-center gap-1 mt-1">
-                        <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-                        <span className="text-yellow-400 text-xs">{game.rating}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+
 
         {/* Results Header */}
         <div className="flex items-center justify-between mb-6">
@@ -345,7 +256,7 @@ export default function GamesPage() {
               >
                 <CardContainer containerClassName="w-full">
                   <CardBody
-                    className={`h-[320px] lg:h-[370px] w-full cursor-pointer bg-gradient-to-br ${getCategoryColor(game.category)} backdrop-blur-sm rounded-2xl transition-all duration-300 border hover:scale-[1.02] group`}
+                    className="h-[280px] lg:h-[330px] w-full cursor-pointer bg-gray-900/50 rounded-2xl transition-all duration-300 hover:scale-[1.02] group"
                     onClick={() => handleGameClick(game)}
                     role="button"
                     tabIndex={0}
@@ -405,49 +316,18 @@ export default function GamesPage() {
                         {game.rating}/10
                       </CardItem>
 
-                      {/* Platforms */}
-                      <CardItem
-                        translateZ={25}
-                        className="absolute bottom-2 left-2"
-                      >
-                        <div className="bg-black/60 backdrop-blur-sm rounded px-2 py-1">
-                          <PlatformIcons platforms={game.platforms} size="sm" />
-                        </div>
-                      </CardItem>
+
                     </div>
 
                     {/* Content */}
-                    <div className="h-[45%] flex flex-col justify-between p-4">
-                      <div>
-                        <CardItem translateZ={40}>
-                          <h2 className="text-lg font-bold text-white group-hover:text-yellow-300 transition text-center mb-2 font-serif line-clamp-1">
-                            {game.title}
-                          </h2>
-                          <p className="text-sm text-gray-300 line-clamp-2 text-center mb-2">
-                            {game.description}
-                          </p>
-                        </CardItem>
-                      </div>
-
-                      {/* Meta Info */}
-                      <CardItem translateZ={20}>
-                        <div className="space-y-1">
-                          <div className="flex items-center justify-center gap-4 text-xs text-gray-400">
-                            <div className="flex items-center gap-1">
-                              <User className="w-3 h-3" />
-                              <span className="truncate max-w-20">{game.developer}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <Calendar className="w-3 h-3" />
-                              <span>{new Date(game.releaseDate).getFullYear()}</span>
-                            </div>
-                          </div>
-                          <div className="text-center">
-                            <span className="inline-block bg-white/10 text-white px-2 py-1 rounded text-xs capitalize">
-                              {game.category.replace('-', ' ')}
-                            </span>
-                          </div>
-                        </div>
+                    <div className="h-[40%] flex flex-col justify-center p-4">
+                      <CardItem translateZ={40}>
+                        <h2 className="text-xl font-bold text-white group-hover:text-yellow-300 transition text-center mb-2 font-serif">
+                          {game.title}
+                        </h2>
+                        <p className="text-sm text-gray-300 line-clamp-2 text-center">
+                          {game.description}
+                        </p>
                       </CardItem>
                     </div>
                   </CardBody>
