@@ -12,7 +12,7 @@ import { useRecentlyViewed } from "./hooks/use-recently-viewed";
 import { GameComparison, CompareButton } from "./ui/game-comparison";
 import { ClientOnly } from "./ui/client-only";
 import { useState, useMemo, useEffect } from "react";
-import { Heart, Zap, BarChart3 } from "lucide-react";
+import { Heart, Zap, BarChart3, Star } from "lucide-react";
 
 
 interface FilterOptions {
