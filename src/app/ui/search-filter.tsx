@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Filter, X, ChevronDown } from "lucide-react";
+import { Search, Filter, X, ChevronDown, Heart, BarChart3 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface SearchFilterProps {
@@ -11,6 +11,12 @@ interface SearchFilterProps {
   searchQuery: string;
   activeFilters: FilterOptions;
   sortBy: string;
+  showOnlyFavorites: boolean;
+  onToggleFavorites: (show: boolean) => void;
+  favoritesCount: number;
+  compareList: string[];
+  onToggleComparison: () => void;
+  isMounted: boolean;
 }
 
 interface FilterOptions {
@@ -35,7 +41,13 @@ export function SearchFilter({
   onSort,
   searchQuery,
   activeFilters,
-  sortBy
+  sortBy,
+  showOnlyFavorites,
+  onToggleFavorites,
+  favoritesCount,
+  compareList,
+  onToggleComparison,
+  isMounted
 }: SearchFilterProps) {
   const [showFilters, setShowFilters] = useState(false);
   const [showSortDropdown, setShowSortDropdown] = useState(false);
@@ -71,7 +83,7 @@ export function SearchFilter({
                           activeFilters.releaseYear !== "";
 
   return (
-    <div className="sticky top-0 z-40 bg-gradient-to-r from-purple-800/95 via-blue-800/95 to-purple-800/95 backdrop-blur-md border-b border-white/10">
+    <div className="w-full">
       <div className="max-w-7xl mx-auto p-4">
         {/* Search and Controls */}
         <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
@@ -134,17 +146,56 @@ export function SearchFilter({
               </AnimatePresence>
             </div>
 
+            {/* Favorites Toggle */}
+            <button
+              onClick={() => onToggleFavorites(!showOnlyFavorites)}
+              className={`flex items-center gap-2 px-4 py-2 border rounded-lg transition-all ${
+                showOnlyFavorites
+                  ? 'bg-red-600 border-red-500 text-white'
+                  : 'bg-white/10 border-white/20 text-white hover:bg-white/20'
+              }`}
+              aria-label="Toggle favorites filter"
+            >
+              <Heart className={`w-4 h-4 ${showOnlyFavorites ? 'fill-white' : ''}`} />
+              <span className="text-sm hidden sm:inline">Favorites</span>
+              {isMounted && favoritesCount > 0 && (
+                <span className="bg-white/20 text-xs px-1.5 py-0.5 rounded-full">
+                  {favoritesCount}
+                </span>
+              )}
+            </button>
+
+            {/* Compare Toggle */}
+            <button
+              onClick={onToggleComparison}
+              className={`flex items-center gap-2 px-4 py-2 border rounded-lg transition-all ${
+                compareList.length > 0
+                  ? 'bg-green-600 border-green-500 text-white'
+                  : 'bg-white/10 border-white/20 text-white hover:bg-white/20'
+              }`}
+              aria-label="Compare selected games"
+              disabled={compareList.length === 0}
+            >
+              <BarChart3 className="w-4 h-4" />
+              <span className="text-sm hidden sm:inline">Compare</span>
+              {isMounted && compareList.length > 0 && (
+                <span className="bg-white/20 text-xs px-1.5 py-0.5 rounded-full">
+                  {compareList.length}
+                </span>
+              )}
+            </button>
+
             {/* Filter Toggle */}
             <button
               onClick={() => setShowFilters(!showFilters)}
               className={`flex items-center gap-2 px-4 py-2 border rounded-lg transition-all ${
-                hasActiveFilters 
-                  ? 'bg-blue-600 border-blue-500 text-white' 
+                hasActiveFilters
+                  ? 'bg-blue-600 border-blue-500 text-white'
                   : 'bg-white/10 border-white/20 text-white hover:bg-white/20'
               }`}
             >
               <Filter className="w-4 h-4" />
-              <span className="text-sm">Filters</span>
+              <span className="text-sm hidden sm:inline">Filters</span>
               {hasActiveFilters && (
                 <span className="bg-white/20 text-xs px-1.5 py-0.5 rounded-full">
                   {activeFilters.categories.length + activeFilters.platforms.length + (activeFilters.minRating > 0 ? 1 : 0)}
@@ -161,7 +212,7 @@ export function SearchFilter({
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="mt-4 p-4 bg-black/20 rounded-lg border border-white/10"
+              className="mt-4 p-4 bg-black/50 rounded-lg border border-white/20"
             >
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Categories */}
