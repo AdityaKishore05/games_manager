@@ -4,9 +4,13 @@ import { useState, useEffect } from "react";
 
 export function useFavorites() {
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    // Load favorites from localStorage on mount
+    // Mark as hydrated to prevent SSR mismatch
+    setIsHydrated(true);
+    
+    // Load favorites from localStorage after hydration
     const stored = localStorage.getItem("game-favorites");
     if (stored) {
       try {
@@ -19,6 +23,8 @@ export function useFavorites() {
   }, []);
 
   const toggleFavorite = (gameId: string) => {
+    if (!isHydrated) return; // Prevent action before hydration
+    
     setFavorites(prev => {
       const newFavorites = prev.includes(gameId)
         ? prev.filter(id => id !== gameId)
@@ -30,11 +36,15 @@ export function useFavorites() {
     });
   };
 
-  const isFavorite = (gameId: string) => favorites.includes(gameId);
+  const isFavorite = (gameId: string) => {
+    if (!isHydrated) return false; // Return false during SSR
+    return favorites.includes(gameId);
+  };
 
   return {
-    favorites,
+    favorites: isHydrated ? favorites : [], // Return empty array during SSR
     toggleFavorite,
-    isFavorite
+    isFavorite,
+    isHydrated
   };
 }
