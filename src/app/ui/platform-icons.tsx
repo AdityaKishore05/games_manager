@@ -3,7 +3,6 @@
 import { Monitor, Gamepad2 } from "lucide-react";
 import { 
   SiPlaystation, 
-  SiXbox, 
   SiNintendoswitch,
   SiSteam
 } from "react-icons/si";
@@ -30,7 +29,8 @@ export function PlatformIcons({ platforms, className = "", size = "sm" }: Platfo
       return <SiPlaystation className={`${iconSize} text-blue-500`} title={platform} />;
     }
     if (platformLower.includes("xbox")) {
-      return <SiXbox className={`${iconSize} text-green-500`} title={platform} />;
+      // Use Gamepad2 instead of SiXbox to avoid import issues
+      return <Gamepad2 className={`${iconSize} text-green-500`} title={platform} />;
     }
     if (platformLower.includes("nintendo") || platformLower.includes("switch")) {
       return <SiNintendoswitch className={`${iconSize} text-red-500`} title={platform} />;
