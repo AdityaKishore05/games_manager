@@ -6,7 +6,6 @@ import { Cover } from "./ui/cover";
 import { motion } from "framer-motion";
 import { CardContainer, CardBody, CardItem } from "./ui/3d-card";
 import { SearchFilter } from "./ui/search-filter";
-import { PlatformIcons } from "./ui/platform-icons";
 import { LoadingGrid } from "./ui/loading-skeleton";
 import { useFavorites } from "./hooks/use-favorites";
 import { useRecentlyViewed } from "./hooks/use-recently-viewed";
