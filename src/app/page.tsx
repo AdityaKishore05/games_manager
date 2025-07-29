@@ -10,6 +10,7 @@ import { LoadingGrid } from "./ui/loading-skeleton";
 import { useFavorites } from "./hooks/use-favorites";
 import { useRecentlyViewed } from "./hooks/use-recently-viewed";
 import { GameComparison, CompareButton } from "./ui/game-comparison";
+import { ClientOnly } from "./ui/client-only";
 import { useState, useMemo, useEffect } from "react";
 import { Heart, Zap, BarChart3 } from "lucide-react";
 
@@ -23,8 +24,8 @@ interface FilterOptions {
 
 export default function GamesPage() {
   const router = useRouter();
-  const { favorites, toggleFavorite, isFavorite } = useFavorites();
-  const { recentlyViewed, addToRecentlyViewed } = useRecentlyViewed();
+  const { favorites, toggleFavorite, isFavorite, isHydrated } = useFavorites();
+  const { addToRecentlyViewed } = useRecentlyViewed();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState<FilterOptions>({
@@ -36,37 +37,14 @@ export default function GamesPage() {
   const [sortBy, setSortBy] = useState("rating");
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [highContrastMode, setHighContrastMode] = useState(false);
   const [compareList, setCompareList] = useState<string[]>([]);
   const [showComparison, setShowComparison] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
 
-  // Handle mounting to prevent hydration issues
+  // Simulate loading
   useEffect(() => {
-    setIsMounted(true);
-
-    // Load high contrast preference after mounting
-    const stored = localStorage.getItem("high-contrast-mode");
-    if (stored === "true") {
-      setHighContrastMode(true);
-      document.body.classList.add("high-contrast");
-    }
-
-    // Simulate loading
-    const timer = setTimeout(() => setIsLoading(false), 1000);
+    const timer = setTimeout(() => setIsLoading(false), 500);
     return () => clearTimeout(timer);
   }, []);
-
-  const toggleHighContrast = () => {
-    const newMode = !highContrastMode;
-    setHighContrastMode(newMode);
-    localStorage.setItem("high-contrast-mode", newMode.toString());
-    if (newMode) {
-      document.body.classList.add("high-contrast");
-    } else {
-      document.body.classList.remove("high-contrast");
-    }
-  };
 
   const toggleCompare = (gameId: string) => {
     setCompareList(prev => {
@@ -82,7 +60,7 @@ export default function GamesPage() {
   const compareGames = games.filter(game => compareList.includes(game.id));
 
   const handleGameClick = (game: Game) => {
-    if (isMounted) {
+    if (isHydrated) {
       addToRecentlyViewed(game);
     }
     router.push(`/${game.slug}`);
@@ -117,8 +95,8 @@ export default function GamesPage() {
         if (!hasMatchingPlatform) return false;
       }
 
-      // Favorites filter
-      if (showOnlyFavorites && !isFavorite(game.id)) {
+      // Favorites filter - only apply after hydration
+      if (showOnlyFavorites && isHydrated && !isFavorite(game.id)) {
         return false;
       }
 
@@ -148,7 +126,7 @@ export default function GamesPage() {
 
   if (isLoading) {
     return (
-      <div className={`relative bg-gradient-to-br from-purple-700 via-blue-700 to-purple-700 min-h-screen p-5 lg:p-10 ${highContrastMode ? 'high-contrast' : ''}`}>
+      <div className="relative bg-gradient-to-br from-purple-700 via-blue-700 to-purple-700 min-h-screen p-5 lg:p-10">
         {/* Header skeleton */}
         <div className="text-center mb-8">
           <div className="h-12 w-64 bg-gray-700/50 rounded mx-auto animate-pulse" />
@@ -165,7 +143,7 @@ export default function GamesPage() {
   }
 
   return (
-    <div className={`relative bg-gradient-to-br from-purple-700 via-blue-700 to-purple-700 min-h-screen ${highContrastMode ? 'high-contrast' : ''}`}>
+    <div className="relative bg-gradient-to-br from-purple-700 via-blue-700 to-purple-700 min-h-screen">
       {/* Header */}
       <div className="relative z-30 pt-5 lg:pt-10 pb-4">
         <div className="max-w-7xl mx-auto px-5">
@@ -174,16 +152,7 @@ export default function GamesPage() {
               <Cover>Explore Games</Cover>
             </h1>
 
-            {/* Settings */}
-            <div className="flex items-center gap-3">
-              <button
-                onClick={toggleHighContrast}
-                className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all"
-                aria-label="Toggle high contrast mode"
-              >
-                <Zap className="w-4 h-4" />
-              </button>
-            </div>
+
           </div>
         </div>
       </div>
@@ -202,7 +171,7 @@ export default function GamesPage() {
           favoritesCount={favorites.length}
           compareList={compareList}
           onToggleComparison={() => setShowComparison(true)}
-          isMounted={isMounted}
+          isMounted={isHydrated}
         />
       </div>
 
@@ -267,20 +236,22 @@ export default function GamesPage() {
                       {/* Action Buttons */}
                       <div className="absolute top-2 left-2 flex flex-col gap-2">
                         <CardItem translateZ={30}>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              toggleFavorite(game.id);
-                            }}
-                            className={`p-2 rounded-full backdrop-blur-sm transition-all hover:scale-110 ${
-                              isFavorite(game.id)
-                                ? 'bg-red-500/80 text-white'
-                                : 'bg-black/60 text-gray-300 hover:text-red-400'
-                            }`}
-                            aria-label={`${isFavorite(game.id) ? 'Remove from' : 'Add to'} favorites`}
-                          >
-                            <Heart className={`w-4 h-4 ${isFavorite(game.id) ? 'fill-white' : ''}`} />
-                          </button>
+                          <ClientOnly>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleFavorite(game.id);
+                              }}
+                              className={`p-2 rounded-full backdrop-blur-sm transition-all hover:scale-110 ${
+                                isFavorite(game.id)
+                                  ? 'bg-red-500/80 text-white'
+                                  : 'bg-black/60 text-gray-300 hover:text-red-400'
+                              }`}
+                              aria-label={`${isFavorite(game.id) ? 'Remove from' : 'Add to'} favorites`}
+                            >
+                              <Heart className={`w-4 h-4 ${isFavorite(game.id) ? 'fill-white' : ''}`} />
+                            </button>
+                          </ClientOnly>
                         </CardItem>
 
                         <CardItem translateZ={30}>
