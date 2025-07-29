@@ -10,38 +10,40 @@ export function useRecentlyViewed() {
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    // Mark as hydrated to prevent SSR mismatch
+    // Only run on client side
     setIsHydrated(true);
     
-    // Load recently viewed from localStorage after hydration
-    const stored = localStorage.getItem("recently-viewed-games");
-    if (stored) {
-      try {
-        setRecentlyViewed(JSON.parse(stored));
-      } catch (error) {
-        console.error("Error loading recently viewed:", error);
-        setRecentlyViewed([]);
+    try {
+      const stored = localStorage.getItem("recently-viewed-games");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        setRecentlyViewed(Array.isArray(parsed) ? parsed : []);
       }
+    } catch (error) {
+      console.error("Error loading recently viewed:", error);
+      setRecentlyViewed([]);
     }
   }, []);
 
   const addToRecentlyViewed = (game: Game) => {
-    if (!isHydrated) return; // Prevent action before hydration
+    if (!isHydrated) return;
     
     setRecentlyViewed(prev => {
-      // Remove if already exists
       const filtered = prev.filter(item => item.id !== game.id);
-      // Add to beginning
       const newRecent = [game, ...filtered].slice(0, MAX_RECENT_ITEMS);
       
-      // Save to localStorage
-      localStorage.setItem("recently-viewed-games", JSON.stringify(newRecent));
+      try {
+        localStorage.setItem("recently-viewed-games", JSON.stringify(newRecent));
+      } catch (error) {
+        console.error("Error saving recently viewed:", error);
+      }
+      
       return newRecent;
     });
   };
 
   return {
-    recentlyViewed: isHydrated ? recentlyViewed : [], // Return empty array during SSR
+    recentlyViewed,
     addToRecentlyViewed,
     isHydrated
   };
