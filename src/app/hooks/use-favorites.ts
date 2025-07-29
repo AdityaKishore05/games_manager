@@ -7,42 +7,45 @@ export function useFavorites() {
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    // Mark as hydrated to prevent SSR mismatch
+    // Only run on client side
     setIsHydrated(true);
     
-    // Load favorites from localStorage after hydration
-    const stored = localStorage.getItem("game-favorites");
-    if (stored) {
-      try {
-        setFavorites(JSON.parse(stored));
-      } catch (error) {
-        console.error("Error loading favorites:", error);
-        setFavorites([]);
+    try {
+      const stored = localStorage.getItem("game-favorites");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        setFavorites(Array.isArray(parsed) ? parsed : []);
       }
+    } catch (error) {
+      console.error("Error loading favorites:", error);
+      setFavorites([]);
     }
   }, []);
 
   const toggleFavorite = (gameId: string) => {
-    if (!isHydrated) return; // Prevent action before hydration
+    if (!isHydrated) return;
     
     setFavorites(prev => {
       const newFavorites = prev.includes(gameId)
         ? prev.filter(id => id !== gameId)
         : [...prev, gameId];
       
-      // Save to localStorage
-      localStorage.setItem("game-favorites", JSON.stringify(newFavorites));
+      try {
+        localStorage.setItem("game-favorites", JSON.stringify(newFavorites));
+      } catch (error) {
+        console.error("Error saving favorites:", error);
+      }
+      
       return newFavorites;
     });
   };
 
   const isFavorite = (gameId: string) => {
-    if (!isHydrated) return false; // Return false during SSR
-    return favorites.includes(gameId);
+    return isHydrated && favorites.includes(gameId);
   };
 
   return {
-    favorites: isHydrated ? favorites : [], // Return empty array during SSR
+    favorites,
     toggleFavorite,
     isFavorite,
     isHydrated
