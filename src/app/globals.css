@@ -1,6 +1,96 @@
 @import "tailwindcss";
 
-
 html {
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
+}
+
+/* High Contrast Mode */
+.high-contrast {
+  filter: contrast(1.5) brightness(1.2);
+}
+
+.high-contrast * {
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.8) !important;
+}
+
+.high-contrast .bg-gradient-to-br,
+.high-contrast .bg-gradient-to-r,
+.high-contrast .bg-gradient-to-b {
+  background: linear-gradient(135deg, #000 0%, #1a1a2e 50%, #000 100%) !important;
+}
+
+.high-contrast .bg-gray-900\/50,
+.high-contrast .bg-gray-800\/50,
+.high-contrast .bg-black\/60 {
+  background: rgba(0, 0, 0, 0.9) !important;
+  border: 2px solid #fff !important;
+}
+
+.high-contrast .text-gray-300,
+.high-contrast .text-gray-400 {
+  color: #ffffff !important;
+}
+
+.high-contrast .border-white\/10,
+.high-contrast .border-white\/20 {
+  border-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Line clamp utilities */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Focus styles for accessibility */
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Animation for smooth transitions */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.3s ease-out;
+}
