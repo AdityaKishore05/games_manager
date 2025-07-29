@@ -10,8 +10,9 @@ import { PlatformIcons } from "./ui/platform-icons";
 import { LoadingGrid } from "./ui/loading-skeleton";
 import { useFavorites } from "./hooks/use-favorites";
 import { useRecentlyViewed } from "./hooks/use-recently-viewed";
+import { GameComparison, CompareButton } from "./ui/game-comparison";
 import { useState, useMemo, useEffect } from "react";
-import { Heart, Eye, Calendar, User, Star, Zap } from "lucide-react";
+import { Heart, Eye, Calendar, User, Star, Zap, BarChart3 } from "lucide-react";
 
 
 interface FilterOptions {
@@ -37,6 +38,8 @@ export default function GamesPage() {
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [highContrastMode, setHighContrastMode] = useState(false);
+  const [compareList, setCompareList] = useState<string[]>([]);
+  const [showComparison, setShowComparison] = useState(false);
 
   // Simulate loading
   useEffect(() => {
@@ -63,6 +66,19 @@ export default function GamesPage() {
       document.body.classList.remove("high-contrast");
     }
   };
+
+  const toggleCompare = (gameId: string) => {
+    setCompareList(prev => {
+      if (prev.includes(gameId)) {
+        return prev.filter(id => id !== gameId);
+      } else if (prev.length < 3) {
+        return [...prev, gameId];
+      }
+      return prev;
+    });
+  };
+
+  const compareGames = games.filter(game => compareList.includes(game.id));
 
   const handleGameClick = (game: Game) => {
     addToRecentlyViewed(game);
@@ -187,6 +203,25 @@ export default function GamesPage() {
                 {favorites.length > 0 && (
                   <span className="bg-white/20 text-xs px-1.5 py-0.5 rounded-full">
                     {favorites.length}
+                  </span>
+                )}
+              </button>
+
+              <button
+                onClick={() => setShowComparison(true)}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all ${
+                  compareList.length > 0
+                    ? 'bg-green-600 text-white'
+                    : 'bg-white/10 text-white hover:bg-white/20'
+                }`}
+                aria-label="Compare selected games"
+                disabled={compareList.length === 0}
+              >
+                <BarChart3 className="w-4 h-4" />
+                <span className="hidden sm:inline">Compare</span>
+                {compareList.length > 0 && (
+                  <span className="bg-white/20 text-xs px-1.5 py-0.5 rounded-full">
+                    {compareList.length}
                   </span>
                 )}
               </button>
@@ -331,26 +366,33 @@ export default function GamesPage() {
                         />
                       </CardItem>
 
-                      {/* Favorite Button */}
-                      <CardItem
-                        translateZ={30}
-                        className="absolute top-2 left-2"
-                      >
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleFavorite(game.id);
-                          }}
-                          className={`p-2 rounded-full backdrop-blur-sm transition-all hover:scale-110 ${
-                            isFavorite(game.id)
-                              ? 'bg-red-500/80 text-white'
-                              : 'bg-black/60 text-gray-300 hover:text-red-400'
-                          }`}
-                          aria-label={`${isFavorite(game.id) ? 'Remove from' : 'Add to'} favorites`}
-                        >
-                          <Heart className={`w-4 h-4 ${isFavorite(game.id) ? 'fill-white' : ''}`} />
-                        </button>
-                      </CardItem>
+                      {/* Action Buttons */}
+                      <div className="absolute top-2 left-2 flex flex-col gap-2">
+                        <CardItem translateZ={30}>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleFavorite(game.id);
+                            }}
+                            className={`p-2 rounded-full backdrop-blur-sm transition-all hover:scale-110 ${
+                              isFavorite(game.id)
+                                ? 'bg-red-500/80 text-white'
+                                : 'bg-black/60 text-gray-300 hover:text-red-400'
+                            }`}
+                            aria-label={`${isFavorite(game.id) ? 'Remove from' : 'Add to'} favorites`}
+                          >
+                            <Heart className={`w-4 h-4 ${isFavorite(game.id) ? 'fill-white' : ''}`} />
+                          </button>
+                        </CardItem>
+
+                        <CardItem translateZ={30}>
+                          <CompareButton
+                            gameId={game.id}
+                            isSelected={compareList.includes(game.id)}
+                            onToggle={toggleCompare}
+                          />
+                        </CardItem>
+                      </div>
 
                       {/* Rating */}
                       <CardItem
@@ -413,6 +455,13 @@ export default function GamesPage() {
           </div>
         )}
       </div>
+
+      {/* Game Comparison Modal */}
+      <GameComparison
+        games={compareGames}
+        isOpen={showComparison}
+        onClose={() => setShowComparison(false)}
+      />
     </div>
   );
 }
