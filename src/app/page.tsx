@@ -40,20 +40,22 @@ export default function GamesPage() {
   const [highContrastMode, setHighContrastMode] = useState(false);
   const [compareList, setCompareList] = useState<string[]>([]);
   const [showComparison, setShowComparison] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
-  // Simulate loading
+  // Handle mounting to prevent hydration issues
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
+    setIsMounted(true);
 
-  // High contrast mode
-  useEffect(() => {
+    // Load high contrast preference after mounting
     const stored = localStorage.getItem("high-contrast-mode");
     if (stored === "true") {
       setHighContrastMode(true);
       document.body.classList.add("high-contrast");
     }
+
+    // Simulate loading
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    return () => clearTimeout(timer);
   }, []);
 
   const toggleHighContrast = () => {
@@ -148,7 +150,7 @@ export default function GamesPage() {
   }, [searchQuery, filters, sortBy, showOnlyFavorites, isFavorite]);
 
   const getRecommendations = () => {
-    if (favorites.length === 0) return [];
+    if (!isMounted || favorites.length === 0) return [];
 
     const favoriteGames = games.filter(game => favorites.includes(game.id));
     const favoriteCategories = [...new Set(favoriteGames.map(game => game.category))];
@@ -200,7 +202,7 @@ export default function GamesPage() {
               >
                 <Heart className={`w-4 h-4 ${showOnlyFavorites ? 'fill-white' : ''}`} />
                 <span className="hidden sm:inline">Favorites</span>
-                {favorites.length > 0 && (
+                {isMounted && favorites.length > 0 && (
                   <span className="bg-white/20 text-xs px-1.5 py-0.5 rounded-full">
                     {favorites.length}
                   </span>
@@ -219,7 +221,7 @@ export default function GamesPage() {
               >
                 <BarChart3 className="w-4 h-4" />
                 <span className="hidden sm:inline">Compare</span>
-                {compareList.length > 0 && (
+                {isMounted && compareList.length > 0 && (
                   <span className="bg-white/20 text-xs px-1.5 py-0.5 rounded-full">
                     {compareList.length}
                   </span>
@@ -250,7 +252,7 @@ export default function GamesPage() {
 
       <div className="max-w-7xl mx-auto p-5 lg:p-10">
         {/* Recently Viewed */}
-        {recentlyViewed.length > 0 && (
+        {isMounted && recentlyViewed.length > 0 && (
           <div className="mb-8">
             <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
               <Eye className="w-5 h-5" />
@@ -277,7 +279,7 @@ export default function GamesPage() {
         )}
 
         {/* Recommendations */}
-        {getRecommendations().length > 0 && (
+        {isMounted && getRecommendations().length > 0 && (
           <div className="mb-8">
             <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
               <Star className="w-5 h-5" />
