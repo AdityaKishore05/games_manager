@@ -4,12 +4,14 @@ import { twMerge } from "tailwind-merge";
  
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.alphacoders.com",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
-
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
